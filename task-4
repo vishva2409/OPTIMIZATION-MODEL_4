@@ -1,0 +1,25 @@
+from pulp import *
+
+# Create the LP problem
+problem = LpProblem("Production_Planning", LpMaximize)
+
+# Define decision variables
+x1 = LpVariable("Product_A", lowBound=0, cat='Integer')  # Production quantity of Product A
+x2 = LpVariable("Product_B", lowBound=0, cat='Integer')  # Production quantity of Product B
+
+# Define objective function (maximize profit)
+problem += 10 * x1 + 15 * x2
+
+# Define constraints
+problem += 2 * x1 + x2 <= 40  # Machine 1 constraint
+problem += x1 + 2 * x2 <= 30  # Machine 2 constraint
+
+# Solve the problem
+status = problem.solve()
+
+# Print the results
+print(f"Status: {LpStatus[status]}")
+print(f"Optimal Production Plan:")
+print(f"Product A: {x1.value()}")
+print(f"Product B: {x2.value()}")
+print(f"Maximum Profit: ${pulp.value(problem.objective)}")
